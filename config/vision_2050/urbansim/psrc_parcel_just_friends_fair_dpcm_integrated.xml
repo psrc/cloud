@@ -1,0 +1,211 @@
+<opus_project>
+  <xml_version>2.0</xml_version>
+  <general>
+    <description type="string">Configuration for the PSRC parcel project</description>
+    <parent type="file">psrc_parcel_just_friends_fair_dpcm.xml</parent>
+    <expression_library type="dictionary">
+    </expression_library>
+  </general>
+  <scenario_manager>
+    <scenario executable="True" name="Just_Friends_Integrated" type="scenario">
+      <parent type="scenario_name">PSRC_baseline</parent>
+      <description type="string">LUB, including TM skims</description>
+      <models_to_run config_name="models" type="selectable_list">
+        <selectable name="real_estate_price_model" type="model_choice">True</selectable>
+        <selectable name="postprocess_real_estate_price_model" type="model_choice">False</selectable>
+        <selectable name="expected_sales_unit_price_component_model" type="model_choice">True</selectable>
+        <selectable name="postprocess_expected_sales_unit_price_component_model" type="model_choice">True</selectable>
+        <selectable name="development_proposal_choice_model" type="model_choice">False</selectable>
+        <selectable name="development_proposal_choice_model_by_subarea" type="model_choice">True</selectable>
+        <selectable name="building_construction_model" type="model_choice">True</selectable>
+        <selectable name="modify_workers_jobs_after_moving_households" type="model_choice">True</selectable>
+        <selectable name="modify_workers_jobs_after_moving_jobs" type="model_choice">True</selectable>
+        <selectable name="jobs_event_model" type="model_choice">False</selectable>
+        <selectable name="households_event_model" type="model_choice">False</selectable>
+        <selectable name="household_transition_model" type="model_choice">True</selectable>
+        <selectable name="set_inmigrants_model" type="model_choice">True</selectable>
+        <selectable name="employment_transition_model" type="model_choice">True</selectable>
+        <selectable name="job_person_consistency_keeper" type="model_choice">True</selectable>
+        <selectable name="household_relocation_model" type="model_choice">True</selectable>
+        <selectable name="household_location_choice_model" type="model_choice">True</selectable>
+        <selectable name="modify_workers_jobs_after_moving_households_if_lower_accessibility" type="model_choice">True</selectable>
+        <selectable name="employment_relocation_model" type="model_choice">True</selectable>
+        <selectable name="employment_location_choice_model" type="model_choice">True<group_members type="string">non_home_based</group_members>
+        </selectable>
+        <selectable name="governmental_employment_location_choice_model" type="model_choice">True</selectable>
+        <selectable name="distribute_unplaced_mining_utilities_jobs_model" type="model_choice">False</selectable>
+        <selectable name="modify_workers_jobs_after_moving_jobs" type="model_choice">True</selectable>
+        <selectable name="work_at_home_choice_model" type="model_choice">True</selectable>
+        <selectable name="workplace_choice_model_for_resident" type="model_choice">True</selectable>
+      </models_to_run>
+      <models_in_year type="dictionary">
+        <models_in_year_category key_name="year" key_value="models_list" type="category_with_special_keys">
+          <yearset type="dictionary">
+            <year type="integer">2014</year>
+            <models_list type="list">["assign_work_at_home_to_workers", "work_at_home_choice_model_by_tractcity",  "work_at_home_choice_model_by_subarea", "workplace_choice_model_for_resident"]</models_list>
+          </yearset>
+        </models_in_year_category>
+      </models_in_year>
+      <base_year type="integer">2014</base_year>
+      <years_to_run config_name="years" type="tuple">
+        <firstyear type="integer">2014</firstyear>
+        <lastyear type="integer">2050</lastyear>
+      </years_to_run>
+      <seed convert_blank_to_none="True" type="integer">1</seed>
+      <flush_variables type="boolean">True</flush_variables>
+      <creating_baseyear_cache_configuration type="class">
+        <class_name hidden="True" type="string">CreatingBaseyearCacheConfigurationNoDB</class_name>
+        <class_module hidden="True" type="string">urbansim.configurations.creating_baseyear_cache_configuration</class_module>
+        <argument config_name="cache_directory_root" name="scenario_runs_directory" parser_action="prefix_with_opus_data_path" type="directory">psrc_parcel/integrated</argument>
+        <argument name="baseyear_cache" type="class">
+          <class_name hidden="True" type="string">BaseyearCacheConfiguration</class_name>
+          <class_module hidden="True" type="string">opus_core.configurations.baseyear_cache_configuration</class_module>
+          <argument name="existing_cache_to_copy" parser_action="prefix_with_opus_data_path" type="directory">psrc_parcel/base_year_2014_inputs/land_use_baseline_run104_inputs_target_vacancy</argument>
+        </argument>
+      </creating_baseyear_cache_configuration>
+      <travel_model_configuration inherit_parent_values="False" type="dictionary">
+      	<urbansim_to_tm_variable_mapping type="dictionary">
+        <households type="dictionary">
+          <variable name="hhno" type="string">(household.household_id).astype(int32)</variable>
+          <variable name="hhsize" type="string">(household.persons).astype(int32)</variable>
+          <variable name="hhincome" type="string">(household.income / 1.005**(2040-2040)).astype(int32)</variable>
+          <!-- The income variable is divided by a factor to account for real income growth. The exponent is the difference between the end year (the first number) and the start year (the second number). To not use RIG, make the end year the same as the start year. -->
+          <variable name="hownrent" type="string">(numpy.logical_or(household.tenure == 1, household.tenure == 2) + 2*(household.tenure == 3) + 9*(household.tenure &gt; 3)).astype(int32)</variable>
+          <variable name="hhparcel" type="string">(urbansim_parcel.household.parcel_id).astype(int32)</variable>
+          <variable name="hhtaz" type="string">(urbansim_parcel.household.zone_id).astype(int32)</variable>
+          <variable name="hrestype" type="string">(household.disaggregate(1*urbansim.building.is_single_family_residential + 2*urbansim.building.is_multi_family_residential + 3*urbansim.building.is_condo_residential + 4*urbansim.building.is_mobile_home)).astype(int32)</variable>
+          <variable name="hhexpfac" type="string">(household.household_id &gt; 0).astype(int32)</variable>
+          <variable name="__filter__" type="string"> (urbansim_parcel.household.parcel_id &gt; 0)*(household.number_of_agents(person) &gt; 0) </variable>
+          <variable name="__out_table_name__" type="string">Household</variable>
+        </households>
+        <persons type="dictionary">
+          <variable name="hhno" type="string">(person.household_id).astype(int32)</variable>
+          <variable name="pno" type="string">(person.member_id).astype(int32)</variable>
+          <variable name="pptyp" type="string">(1*(person.employment_status==1) + 2*(person.employment_status==2)*(person.student==0) + 3*(person.employment_status &lt; 1)*(person.student==0)*(person.age &gt; 64) + 4*(person.employment_status &lt; 1)*(person.student==0)*(person.age &gt; 15)*(person.age &lt; 65) + 5*(person.employment_status!=1)*(person.student==1)*(person.age &gt; 18) + 6*(person.employment_status!=1)*(person.student==1)*(person.age &gt; 15)*(person.age &lt; 19) + 7*(person.age &gt; 4)*(person.age &lt; 16) + 8*(person.age &lt; 5)).astype(int32)</variable>
+          <variable name="pagey" type="string">(person.age).astype(int32)</variable>
+          <variable name="pgend" type="string">(person.sex).astype(int32)</variable>
+          <variable name="pwtyp" type="string">(1*(person.employment_status==1)*(urbansim_parcel.person.is_worker_with_job==1) + 2*(person.employment_status==2)*(urbansim_parcel.person.is_worker_with_job==1)).astype(int32)</variable>
+          <variable name="pwpcl" type="string">(-1 * (person.person_id &gt; 0)).astype(int32)</variable>
+          <variable name="pwtaz" type="string">(-1 * (person.person_id &gt; 0)).astype(int32)</variable>
+          <variable name="pstyp" type="string">(person.student*(numpy.logical_or(person.student==1, person.student==2))).astype(int32)</variable>
+          <variable name="pspcl" type="string">(-1 * (person.person_id &gt; 0)).astype(int32)</variable>
+          <variable name="pstaz" type="string">(-1 * (person.person_id &gt; 0)).astype(int32)</variable>
+          <variable name="ptpass" type="string">(-1 * (person.person_id &gt; 0)).astype(int32)</variable>
+          <variable name="ppaidprk" type="string">(-1 * (person.person_id &gt; 0)).astype(int32)</variable>
+          <variable name="psexpfac" type="string">(person.person_id &gt; 0).astype(int32)</variable>
+          <variable name="pdairy" type="string">(-1 * (person.person_id &gt; 0)).astype(int32)</variable>
+          <variable name="puwarrp" type="string">(-1 * (person.person_id &gt; 0)).astype(int32)</variable>
+          <variable name="puwdepp" type="string">(-1 * (person.person_id &gt; 0)).astype(int32)</variable>
+          <variable name="puwmode" type="string">(-1 * (person.person_id &gt; 0)).astype(int32)</variable>
+          <variable name="__filter__" type="string">urbansim_parcel.person.parcel_id &gt; 0</variable>
+          <variable name="__out_table_name__" type="string">Person</variable>
+        </persons>
+        <parcels type="dictionary">
+          <variable name="parcelid" type="string">parcel.parcel_id</variable>
+          <variable name="xcoord_p" type="string">parcel.x_coord_sp</variable>
+          <variable name="ycoord_p" type="string">parcel.y_coord_sp</variable>
+          <variable name="sqft_p" type="string">parcel.parcel_sqft</variable>
+          <variable name="taz_p" type="string">parcel.zone_id</variable>
+          <variable name="lutype_p" type="string">parcel.land_use_type_id</variable>
+          <variable name="hh_p" type="string">(urbansim_parcel.parcel.number_of_households).astype(int32)</variable>
+          <variable name="stugrd_p" type="string">(parcel.aggregate(school.student_count2014 * (psrc_parcel.school.is_in_category_2 + psrc_parcel.school.is_in_category_3))).astype(int32)</variable>
+          <variable name="stuhgh_p" type="string">(parcel.aggregate(school.student_count2014 * psrc_parcel.school.is_in_category_4)).astype(int32)</variable>
+          <variable name="stuuni_p" type="string">(parcel.aggregate(school.fte2014 * psrc_parcel.school.is_in_category_5)).astype(int32)</variable>
+          <variable name="empedu_p" type="string">(parcel.aggregate((job.sector_id==15) + (job.sector_id==19), intermediates=[building])).astype(int32)</variable>
+          <variable name="empfoo_p" type="string">(parcel.aggregate(job.sector_id==14, intermediates=[building])).astype(int32)</variable>
+          <variable name="empgov_p" type="string">(parcel.aggregate(job.sector_id==18, intermediates=[building])).astype(int32)</variable>
+          <variable name="empind_p" type="string">(parcel.aggregate((job.sector_id &gt; 2) * (job.sector_id &lt; 10) * (job.sector_id &lt;&gt; 7), intermediates=[building])).astype(int32)</variable>
+          <variable name="empmed_p" type="string">(parcel.aggregate(job.sector_id==16, intermediates=[building])).astype(int32)</variable>
+          <variable name="empofc_p" type="string">(parcel.aggregate((job.sector_id &gt; 9) * (job.sector_id &lt; 14), intermediates=[building])).astype(int32)</variable>
+          <variable name="empret_p" type="string">(parcel.aggregate(job.sector_id==7, intermediates=[building])).astype(int32)</variable>
+          <variable name="empsvc_p" type="string">(parcel.aggregate(job.sector_id==17, intermediates=[building])).astype(int32)</variable>
+          <variable name="empoth_p" type="string">(parcel.aggregate((job.sector_id==1) + (job.sector_id==2), intermediates=[building])).astype(int32)</variable>
+          <variable name="emprsc_p" type="string">(parcel.aggregate(job.sector_id &gt; 19, intermediates=[building])).astype(int32)</variable> # zeros
+            <variable name="emptot_p" type="string">(urbansim_parcel.parcel.number_of_jobs).astype(int32)</variable>
+          <variable name="parkdy_p" type="string">(parcel.parking_space_daily).astype(int32)</variable>
+          <variable name="parkhr_p" type="string">(parcel.parking_space_hourly).astype(int32)</variable>
+          <variable name="ppricdyp" type="string">(parcel.parking_price_daily * 100).astype(int32)</variable>
+          <variable name="pprichrp" type="string">(parcel.parking_price_hourly * 100).astype(int32)</variable>
+          <variable name="nparks" type="string">(1*(parcel.land_use_type_id==19)).astype(int32)</variable>
+          <variable name="aparks" type="string">(1*(parcel.land_use_type_id==19) * (parcel_sqft)).astype(int32)</variable>
+        </parcels>
+      </urbansim_to_tm_variable_mapping>
+      <meta_data type="dictionary">
+        <households type="dictionary">
+          <column name="hrestype" type="dictionary">
+            <item name="lookup" type="array">['1: Single-family', '2: Multi-family', '3: Condo', '4: Mobile home']</item>
+          </column>
+          <column name="hownrent" type="dictionary">
+            <item name="lookup" type="array">['1: Owned', '2: Rented', '3: Other', '9: Missing']</item>
+          </column>
+        </households>
+        <persons type="dictionary">
+          <column name="pgend" type="dictionary">
+            <item name="lookup" type="array">['1: Male', '2: Female', '9: Missing']</item>
+          </column>
+          <column name="pstyp" type="dictionary">
+            <item name="lookup" type="array">['0: Not a student', '1: Full-time student', '2: Part-time student']</item>
+          </column>
+          <column name="pwtyp" type="dictionary">
+            <item name="lookup" type="array">['0: Not a worker', '1: Full-time worker', '2: Part-time worker']</item>
+          </column>
+          <column name="pptyp" type="dictionary">
+            <item name="lookup" type="array">['1: Full-time worker', '2: Part-time worker', '3: Non-working adult age 65+', '4: Non-working adult age &lt; 65', '5: University student', '6: High-school student age 15+', '7: Child age 5-15', '8: Child age 0-4']</item>
+          </column>
+        </persons>
+      </meta_data>
+      <daysim_file type="dictionary">
+        <format type="string">hdf5g</format>
+        <!-- <format type="string">csv</format>  -->
+        <hdf5_compression convert_blank_to_none="True" type="string">gzip</hdf5_compression>
+        <name type="string">soundcast_inputs.h5</name>
+        <!-- <name type="string">hh_and_persons</name> -->
+      </daysim_file>
+      <matrix_variable_map type="dictionary">
+        <results type="dictionary">
+          <aau1tm type="string">am_single_vehicle_to_work_travel_time</aau1tm>
+          <aau1tl type="string">am_single_vehicle_to_work_toll</aau1tl>
+          <aau1cs type="string">single_vehicle_to_work_travel_cost</aau1cs>
+          <aau1ds type="string">single_vehicle_to_work_travel_distance</aau1ds>
+          <awlktm type="string">am_walk_time_in_minutes</awlktm>
+          <avehda type="string">am_pk_period_drive_alone_vehicle_trips</avehda>
+          <atrtwa type="string">am_total_transit_time_walk</atrtwa>
+          <lsum1 type="string">logsum_hbw_am_income_1</lsum1>
+          <lsum2 type="string">logsum_hbw_am_income_2</lsum2>
+          <lsum3 type="string">logsum_hbw_am_income_3</lsum3>
+          <lsum4 type="string">logsum_hbw_am_income_4</lsum4>
+        </results>
+      </matrix_variable_map>
+        <travel_model_base_directory type="string">d:\soundcast_root</travel_model_base_directory>
+        <!-- <emme2_batch_file_name type="string">run_model_common_tg_beta.bat 3700 3733 3750 3751 4000</emme2_batch_file_name> -->
+        <emme_command type="string">emme -ng 127.0.0.1</emme_command>
+        <locations_to_disaggregate type="list">['parcel', 'building']</locations_to_disaggregate>
+        <travel_model_input_file_writer type="string">psrc_parcel.travel_model_input_file_writer_emme4</travel_model_input_file_writer>
+        <models type="selectable_list">
+          <selectable name="inprocess.hana.opus_daysim.models.get_cache_data_into_daysim" type="selectable">True</selectable>
+          <selectable name="psrc_parcel.emme.models.get_cache_data_into_emme4" type="selectable">False</selectable>
+          <selectable name="psrc_parcel.emme.models.run_travel_model" type="selectable">True</selectable>
+          <selectable name="psrc_parcel.emme.models.run_export_skims" type="selectable">False</selectable>
+          <selectable name="psrc_parcel.emme.models.get_emme4_data_from_h5_into_cache" type="selectable">True</selectable>
+        </models>
+        <daysim_base_directory parser_action="prefix_with_opus_data_path" type="directory">D:/opusgit/urbansim_data/data/psrc_parcel/2014SoundCastData</daysim_base_directory>
+        <years_to_run key_name="year" type="category_with_special_keys">
+          <run_description type="dictionary">
+            <daysim_exchange_dir type="string">urbansim_outputs/2025</daysim_exchange_dir>
+            <year type="integer">2025</year>
+            <bank type="list">['2025']</bank>
+            <emme2_batch_file_name type="string">skip_soundcast_2025.bat</emme2_batch_file_name>
+          </run_description>
+          <run_description type="dictionary">
+            <daysim_exchange_dir type="string">urbansim_outputs/2040</daysim_exchange_dir>
+            <year type="integer">2040</year>
+            <bank type="list">['2040']</bank>
+            <emme2_batch_file_name type="string">skip_soundcast_2040.bat</emme2_batch_file_name>
+          </run_description>
+        </years_to_run>
+      </travel_model_configuration>
+    </scenario>
+  </scenario_manager>
+  <results_manager>
+    </results_manager>
+</opus_project>
