@@ -55,18 +55,17 @@ for cloud_name in cloud_list:
 			git('clone','https://github.com/psrc/urbansim','-b',urbansim_branch)
 
 		# os.chdir(os.path.join(cloud_dir,'urbansim'))
-		# git('stash')
-		# git('checkout', urbansim_branch)
-		# git('checkout', 'tags/'+urbansim_tag)
 		checkout_tag(cloud_dir, 'urbansim', urbansim_branch, urbansim_tag)
 
 		# Pull urbansim_data data
 		if not os.path.exists(os.path.join(cloud_dir,'urbansim_data')):
-			git('clone','https://github.com/psrc/urbansim','-b',urbansim_data_branch)
+			git('clone','https://github.com/psrc/urbansim_data','-b',urbansim_data_branch)
 
 		# Update urbansim_data code, and/or check out tag
-		# os.chdir(os.path.join(cloud_dir,'urbansim_data'))
-		# git('stash')
-		# git('checkout', urbansim_data_branch)
-		# git('checkout', 'tags/'+urbansim_data_tag)
 		checkout_tag(cloud_dir, 'urbansim_data', urbansim_data_branch, urbansim_data_tag)
+
+	# Copy configuration files to Soundcast runs
+
+# Move batch files to machines
+
+# Add existing skim files if requested
