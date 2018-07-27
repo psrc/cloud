@@ -1,6 +1,6 @@
 # List of machines to target
 # cloud_list = ['aws-model03','aws-model04','aws-model05']
-cloud_list = ['aws-model04','aws-model05']
+cloud_list = ['aws-model01']
 
 # Soundcast config files
 soundcast_config_source = 'vision_2050'
@@ -17,8 +17,8 @@ copy_batch_files = True
 copy_archive_skims = True
 
 # Git
-soundcast_branch = 'master'
-soundcast_tag = 'v2.1'
+soundcast_branch = 'dev'
+soundcast_tag = None  
 
 urbansim_branch = 'dev'
 urbansim_tag = None

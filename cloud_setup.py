@@ -27,6 +27,9 @@ def checkout_tag(main_dir, repo_name, branch, tag=None):
 # This global file will have all the info from input_configuration.py, and we will know the source of each machine's creation
 # Write a copy of this file to each machine too?
 
+# local working directory
+local_dir = os.getcwd()
+
 # For each machine, pull tagged version of Soundcast code
 for cloud_name in cloud_list:
 	print cloud_name
@@ -58,20 +61,17 @@ for cloud_name in cloud_list:
 						soundcast_branch,str(year))
 				
 				# checkout proper branch and tag
-				os.chdir(os.path.join(src_dir,str(year)))
-				git('stash')    # assuming overwrite of existing runs/code
-				git('checkout', soundcast_branch)
-				git('checkout', 'tags/'+soundcast_tag)
+				checkout_tag(src_dir, str(year), soundcast_branch, soundcast_tag)
 
 			if update_soundcast_config:
 				# Copy configuration files to each Soundcast run year
-				src = os.path.join(os.getcwd(),'config','soundcast',soundcast_config_source, str(year),'input_configuration.py')
+				src = os.path.join(local_dir,'config','soundcast',soundcast_config_source, str(year),'input_configuration.py')
 				dst = os.path.join(src_dir,str(year),'input_configuration.py')
 				copyfile(src, dst)
 
 			if copy_batch_files:
 				# Copy batch files for integrated run management
-				src = os.path.join(os.getcwd(),'batch','run_soundcast_'+str(year)+'.bat')
+				src = os.path.join(local_dir,'batch','run_soundcast_'+str(year)+'.bat')
 				dst = os.path.join(src_dir,'run_soundcast_'+str(year)+'.bat')
 				copyfile(src, dst)
 
@@ -99,6 +99,10 @@ for cloud_name in cloud_list:
 		# Update urbansim_data code, and/or check out tag
 		checkout_tag(src_dir, 'urbansim_data', urbansim_data_branch, urbansim_data_tag)
 
+# Pseudo code notes
 
+# Take input from users that specifies config file to use for setup
+# Write copy of config file to each machine in the root directory, along with a timestamp 
+# and source of call that built the machine. 
 
 
