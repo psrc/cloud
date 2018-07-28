@@ -1,10 +1,10 @@
 # This script pulls all code, inputs, and spec files to a list of specified AWS servers to ensure consistency
 
-import os
+import os, sys
 import subprocess
-import shutil
+import json
 from shutil import copyfile
-from cloud_setup_config import *
+import configparser
 
 def git(*args):
 	'''
@@ -22,87 +22,122 @@ def checkout_tag(main_dir, repo_name, branch, tag=None):
 	if tag:
 		git('checkout', 'tags/'+tag)
 
-# Thought:
-# Load a global config file - pass in command line, like python cloud_setup.py -config config\global\vision_2050.py
-# This global file will have all the info from input_configuration.py, and we will know the source of each machine's creation
-# Write a copy of this file to each machine too?
+def config_list(heading, var, config):
+	"""
+	Convert string to list from config settings
+	"""
+	raw = config[heading][var]
+	raw = raw.split(',')
+	return [i.strip() for i in raw]
 
+def update_server(config):
 # local working directory
-local_dir = os.getcwd()
+	local_dir = os.getcwd()
 
-# For each machine, pull tagged version of Soundcast code
-for cloud_name in cloud_list:
-	print cloud_name
+	config = configparser.ConfigParser()
+	config.read(config_name)
 
-	# Before anything happens, make sure the directory structure exists at the cloud root as expected
-	# E -> soundcast_root -> src 
-	root_dir = os.path.join(r'\\',cloud_name,'e$','soundcast_root')
-	if not os.path.exists(root_dir):
-		os.makedirs(root_dir)
+	cloud_list = config_list('global', 'cloud_list', config)
+	for cloud_name in cloud_list:
+		print cloud_name
 
-	src_dir = os.path.join(r'\\',cloud_name,'e$','soundcast_root','src')
-	if not os.path.exists(src_dir):
-		os.makedirs(src_dir)
-	
-	# Proceed through each year if we are updating repositories or copying batch files
-	if update_soundcast_repo or update_soundcast_config or copy_batch_files:
-		# Download a tagged version of Soundcast code to the cloud machine
-		
-		for year in model_years:
-			print year
+		# Before anything happens, make sure the directory structure exists at the cloud root as expected
+		# E -> soundcast_root -> src 
+		root_dir = os.path.join(r'\\',cloud_name,'e$','soundcast_root')
+		if not os.path.exists(root_dir):
+			os.makedirs(root_dir)
 
-			if update_soundcast_repo:
-				
-				# clone directory if it doesn't exist
-				if not os.path.exists(os.path.join(src_dir,str(year))):
-					os.chdir(src_dir)
-					# clone repo if it doesn't exist
-					git('clone','https://github.com/psrc/soundcast','-b',
-						soundcast_branch,str(year))
-				
-				# checkout proper branch and tag
-				checkout_tag(src_dir, str(year), soundcast_branch, soundcast_tag)
+		src_dir = os.path.join(r'\\',cloud_name,'e$','soundcast_root','src')
+		if not os.path.exists(src_dir):
+			os.makedirs(src_dir)
 
-			if update_soundcast_config:
-				# Copy configuration files to each Soundcast run year
-				src = os.path.join(local_dir,'config','soundcast',soundcast_config_source, str(year),'input_configuration.py')
-				dst = os.path.join(src_dir,str(year),'input_configuration.py')
+		# Proceed through each year if we are updating repositories or copying batch files
+		if (config['global']['update_soundcast_repo'] or 
+			config['global']['update_soundcast_config'] or 
+			config['global']['copy_batch_files']):
+			# Download a tagged version of Soundcast code to the cloud machine
+			
+			model_years = config_list('soundcast', 'model_years', config)
+			for year in model_years:
+				print year
+
+				if config['global']['update_soundcast_repo']:
+					
+					# clone directory if it doesn't exist
+					if not os.path.exists(os.path.join(src_dir,str(year))):
+						os.chdir(src_dir)
+						# clone repo if it doesn't exist
+						git('clone','https://github.com/psrc/soundcast','-b',
+							config['soundcast']['branch'],str(year))
+					
+					# checkout proper branch and tag
+					print config['soundcast']['tag']
+
+					if config['soundcast']['tag'] == None:
+						'yes'
+					checkout_tag(src_dir, str(year), config['soundcast']['branch'], config['soundcast']['tag'])
+
+				if config['global']['update_soundcast_config']:
+					# Copy configuration files to each Soundcast run year
+					src = os.path.join(local_dir,'config','soundcast',config['soundcast']['config_source'], 
+						str(year),'input_configuration.py')
+					dst = os.path.join(src_dir,str(year),'input_configuration.py')
+					copyfile(src, dst)
+
+				if config['global']['copy_batch_files']:
+					# Copy batch files for integrated run management
+					src = os.path.join(local_dir,'batch','run_soundcast_'+str(year)+'.bat')
+					dst = os.path.join(src_dir,'run_soundcast_'+str(year)+'.bat')
+					copyfile(src, dst)
+
+		# Add existing skim files to the root_dir if requested
+		if config['global']['copy_archive_skims']:
+			skim_years = config_list('skims', 'skim_years', config)
+			for year in skim_years:
+				src = os.path.join(config['skims']['skims_archive_dir'],str(year)+'-travelmodel.h5')
+				dst = os.path.join(root_dir,str(year)+'-travelmodel.h5')
 				copyfile(src, dst)
 
-			if copy_batch_files:
-				# Copy batch files for integrated run management
-				src = os.path.join(local_dir,'batch','run_soundcast_'+str(year)+'.bat')
-				dst = os.path.join(src_dir,'run_soundcast_'+str(year)+'.bat')
-				copyfile(src, dst)
+		if update_urbansim_repo:
 
-	# Add existing skim files to the root_dir if requested
-	if copy_archive_skims:
-		for year in skim_years:
-			src = os.path.join(skims_archive_dir,str(year)+'-travelmodel.h5')
-			dst = os.path.join(root_dir,str(year)+'-travelmodel.h5')
-			copyfile(src, dst)
+			# Pull urbansim data
+			if not os.path.exists(os.path.join(src_dir,'urbansim')):
+				git('clone','https://github.com/psrc/urbansim','-b',urbansim_branch)
 
-	if update_urbansim_repo:
+			# os.chdir(os.path.join(src_dir,'urbansim'))
+			checkout_tag(src_dir, 'urbansim', urbansim_branch, urbansim_tag)
 
-		# Pull urbansim data
-		if not os.path.exists(os.path.join(src_dir,'urbansim')):
-			git('clone','https://github.com/psrc/urbansim','-b',urbansim_branch)
+		if update_urbansim_data_repo:
+			# Pull urbansim_data data
+			if not os.path.exists(os.path.join(src_dir,'urbansim_data')):
+				git('clone','https://github.com/psrc/urbansim_data','-b',urbansim_data_branch)
 
-		# os.chdir(os.path.join(src_dir,'urbansim'))
-		checkout_tag(src_dir, 'urbansim', urbansim_branch, urbansim_tag)
+			# Update urbansim_data code, and/or check out tag
+			checkout_tag(src_dir, 'urbansim_data', urbansim_data_branch, urbansim_data_tag)
 
-	if update_urbansim_data_repo:
-		# Pull urbansim_data data
-		if not os.path.exists(os.path.join(src_dir,'urbansim_data')):
-			git('clone','https://github.com/psrc/urbansim_data','-b',urbansim_data_branch)
+		# Export copy of config file to local server
 
-		# Update urbansim_data code, and/or check out tag
-		checkout_tag(src_dir, 'urbansim_data', urbansim_data_branch, urbansim_data_tag)
+def parse_config(config_name):
 
-# Pseudo code notes
+	config = configparser.ConfigParser()
+	config.read(config_name)
+	return config
 
-# Take input from users that specifies config file to use for setup
-# Write copy of config file to each machine in the root directory, along with a timestamp 
-# and source of call that built the machine. 
+def program(config_name):
+
+	# config = parse_config(config_name)
+	# config = configparser.ConfigParser()
+	# # config.read(config_name)
+	update_server(config_name)
 
 
+
+if __name__ == "__main__":
+    try:
+        config_name = sys.argv[1]
+    except IndexError:
+        print "Usage: cloud_setup.py <config_file.ini>"
+        sys.exit(1)
+
+    # start the program
+    program(config_name)
