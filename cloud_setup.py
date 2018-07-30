@@ -30,7 +30,7 @@ def config_list(heading, var, config):
 	raw = raw.split(',')
 	return [i.strip() for i in raw]
 
-def update_server(config):
+def update_server(config_name):
 # local working directory
 	local_dir = os.getcwd()
 
@@ -136,8 +136,9 @@ if __name__ == "__main__":
     try:
         config_name = sys.argv[1]
     except IndexError:
-        print "Usage: cloud_setup.py <config_file.ini>"
+        print "Usage: cloud_setup.py <config\global\config_file.ini>"
         sys.exit(1)
 
     # start the program
+    print config_name
     program(config_name)
