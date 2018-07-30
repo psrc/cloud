@@ -24,6 +24,7 @@ def checkout_tag(main_dir, repo_name, branch, tag=None):
 	git('checkout', branch)
 	if tag:
 		git('checkout', 'tags/'+tag)
+	git('pull')    # If not switching branches, pull latest code
 
 def config_list(heading, var, config):
 	"""
@@ -43,12 +44,13 @@ def update_server(config_name):
 	config = configparser.ConfigParser()
 	config.read(config_name)
 
+	# Loop through multiple servers as needed
 	cloud_list = config_list('global', 'cloud_list', config)
 	for cloud_name in cloud_list:
 		print cloud_name
 
-		# Before anything happens, make sure the directory structure exists at the cloud root as expected
-		# E -> soundcast_root -> src 
+		# Before anything happens, make sure the directory structure exists at the server root as expected
+		# E -> soundcast_root -> src; E -> opusgit -> urbansim; E -> opusgit -> urbansim_data; 
 		root_dir = os.path.join(r'\\',cloud_name,'e$','soundcast_root')
 		if not os.path.exists(root_dir):
 			os.makedirs(root_dir)
@@ -82,10 +84,6 @@ def update_server(config_name):
 							config['soundcast']['branch'],str(year))
 					
 					# checkout proper branch and tag
-					print config['soundcast']['tag']
-
-					if config['soundcast']['tag'] == None:
-						'yes'
 					checkout_tag(src_dir, str(year), config['soundcast']['branch'], config['soundcast']['tag'])
 
 				if config['global']['update_soundcast_config'] in['true','True','TRUE']:
