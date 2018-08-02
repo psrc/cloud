@@ -28,6 +28,7 @@ This script can perform the following tasks (which are controled through the `*.
 - save local log information that contains the global config file and information on build specs
 
 Together, these processes build a consistent modeling machine that works for independent and integrated Soundcast and Urbansim runs.
+
 ----
 
 For more information, visit:
