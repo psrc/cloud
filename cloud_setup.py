@@ -44,6 +44,9 @@ def update_server(config_name):
 	config = configparser.ConfigParser()
 	config.read(config_name)
 
+		# drive name
+	drive_name = config['global']['drive_name'] + '$'
+
 	# Loop through multiple servers as needed
 	cloud_list = config_list('global', 'cloud_list', config)
 	for cloud_name in cloud_list:
@@ -51,15 +54,15 @@ def update_server(config_name):
 
 		# Before anything happens, make sure the directory structure exists at the server root as expected
 		# E -> soundcast_root -> src; E -> opusgit -> urbansim; E -> opusgit -> urbansim_data; 
-		root_dir = os.path.join(r'\\',cloud_name,'e$','soundcast_root')
+		root_dir = os.path.join(r'\\',cloud_name,drive_name,'soundcast_root')
 		if not os.path.exists(root_dir):
 			os.makedirs(root_dir)
 
-		src_dir = os.path.join(r'\\',cloud_name,'e$','soundcast_root','src')
+		src_dir = os.path.join(r'\\',cloud_name,drive_name,'soundcast_root','src')
 		if not os.path.exists(src_dir):
 			os.makedirs(src_dir)
 
-		opusgit_dir = os.path.join(r'\\',cloud_name,'e$','opusgit')
+		opusgit_dir = os.path.join(r'\\',cloud_name,drive_name,'opusgit')
 		if not os.path.exists(opusgit_dir):
 			os.makedirs(opusgit_dir)
 
@@ -128,7 +131,7 @@ def update_server(config_name):
 			checkout_tag(opusgit_dir, 'urbansim_data', config['urbansim_data']['branch'], config['urbansim_data']['tag'])
 
 		# Export copy of config file to local server
-		log_dir = os.path.join(r'\\',cloud_name,'e$','log')
+		log_dir = os.path.join(r'\\',cloud_name,drive_name,'log')
 		if not os.path.exists(log_dir):
 			os.makedirs(log_dir)
 
