@@ -29,4 +29,5 @@ This script can perform the following tasks (which are controled through the `*.
 
 Together, these processes build a consistent modeling machine that works for independent and integrated Soundcast and Urbansim runs.
 
-[For more information about creating and managing model servers visit the wiki](https://github.com/psrc/cloud/wiki)
+For more information, visit:
+# [Managing and Creating Servers Wiki](https://github.com/psrc/cloud/wiki/cloud)
