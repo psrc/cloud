@@ -2,6 +2,8 @@
 
 Configure a set of servers with a common set of code and settings. 
 
+# Usage
+
 Specify settings in `*.ini` file in config/global.
 Each `*.in` file represents a single global configuration for cloud machines.
 These control which machines are updated, which components are refreshed,
