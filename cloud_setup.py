@@ -132,30 +132,6 @@ def update_server(config_name):
 			# Update urbansim_data code, and/or check out tag
 			checkout_tag(opusgit_dir, 'urbansim_data', config['urbansim_data']['branch'], config['urbansim_data']['tag'])
 
-		if config['global']['install_virtualenv'] in ['true','True','TRUE']:
-
-			# Update virtual environment
-			env_name = config['virtualenv']['env_name']
-			env_spec_file = config['virtualenv']['env_spec_file']
-
-			print 'Updating virutal environment: "' + env_name + '" from: ' + env_spec_file
-
-			# Remove if already exists and reinstall
-			conda_list = subprocess.check_output('conda env list')
-			if 'envs\\model' in conda_list:
-				try:
-					proc = subprocess.check_output('conda remove --name ' + env_name +' --all')
-					proc.communicate("y")[0]  # send response to prompt
-				except:
-					print 'unable to delete old virtual environment'
-
-			# Install from env_spec_file path
-			try:
-				test = subprocess.check_output('conda env create -f '+ env_spec_file)
-				print test
-			except:
-				print 'unable to create virtual environment'
-
 		# Export copy of config file to local server
 		log_dir = os.path.join(r'\\',cloud_name,drive_name,'log')
 		if not os.path.exists(log_dir):
