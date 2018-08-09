@@ -26,7 +26,6 @@ This script can perform the following tasks (which are controled through the `*.
     - these are copied into the soundcast repositories clones\pulled from github
 - copy batch files required for integrated runs
 - copy skim files inputs for integrated runs, to reduce full soundcast run requirements for all years (e.g., 2014)
-- install\update modeling virtual environment
 - save local log information that contains the global config file and information on build specs
 
 Together, these processes build a consistent modeling machine that works for independent and integrated Soundcast and Urbansim runs.
