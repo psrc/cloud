@@ -44,7 +44,7 @@ def update_server(config_name):
 	config = configparser.ConfigParser()
 	config.read(config_name)
 
-		# drive name
+	# drive name
 	drive_name = config['global']['drive_name'] + '$'
 
 	# Loop through multiple servers as needed
@@ -117,6 +117,7 @@ def update_server(config_name):
 			print 'Updating urbansim from remote repository'
 
 			if not os.path.exists(os.path.join(opusgit_dir,'urbansim')):
+				os.chdir(opusgit_dir)
 				git('clone','https://github.com/psrc/urbansim','-b',config['urbansim']['branch'])
 
 			checkout_tag(opusgit_dir, 'urbansim', config['urbansim']['branch'], config['urbansim']['tag'])
@@ -125,6 +126,7 @@ def update_server(config_name):
 			print 'Updating urbansim_data from remote repository'
 			
 			if not os.path.exists(os.path.join(opusgit_dir,'urbansim_data')):
+				os.chdir(opusgit_dir)
 				git('clone','https://github.com/psrc/urbansim_data','-b',config['urbansim_data']['branch'])
 
 			# Update urbansim_data code, and/or check out tag
@@ -149,7 +151,7 @@ def update_server(config_name):
 
 			# Install from env_spec_file path
 			try:
-				test = subprocess.check_output('conda env create --name '+env_name+' --file '+env_spec_file)
+				test = subprocess.check_output('conda env create -f '+ env_spec_file)
 				print test
 			except:
 				print 'unable to create virtual environment'
