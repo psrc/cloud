@@ -7,7 +7,7 @@ import os
 # Scenario and input paths
 #####################################################################
 base_year = '2014'  # This should always be 2014 unless the base year changes
-scenario_name = '2050_lodes_beta_run2'
+scenario_name = '2050_stc'
 model_year = '2050'
 main_inputs_folder = 'R:/SoundCast/Inputs/lodes/vision'
 #####################################################################
@@ -21,7 +21,7 @@ run_copy_scenario_inputs = True
 run_import_networks = True
 #only run_daysim_zone_inputs in the base year currently
 run_daysim_zone_inputs = False
-run_integrated = True
+run_integrated = False
 
 # to get the first iteration of skims:
 run_skims_and_paths_free_flow = True
