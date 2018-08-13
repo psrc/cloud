@@ -1,6 +1,6 @@
 # This script pulls all code, inputs, and spec files to a list of specified AWS servers to ensure consistency
 
-import os, sys
+import os, sys, shutil
 import subprocess
 import json
 import time
@@ -134,11 +134,12 @@ def update_server(config_name):
 
 		# Export copy of config file to local server
 		log_dir = os.path.join(r'\\',cloud_name,drive_name,'log')
-		if not os.path.exists(log_dir):
-			os.makedirs(log_dir)
+		if os.path.exists(log_dir):
+		    shutil.rmtree(log_dir)
+		os.makedirs(log_dir)
 
 		src = os.path.join(local_dir,config_name)
-		dst = os.path.join(os.path.join(log_dir, config_name.split('\\')[-1]))
+		dst = os.path.join(os.path.join(log_dir, config_name.split('/')[-1]))
 		print src
 		print dst
 		copyfile(src, dst)
