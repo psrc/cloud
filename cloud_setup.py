@@ -139,7 +139,7 @@ def update_server(config_name):
 		os.makedirs(log_dir)
 
 		src = os.path.join(local_dir,config_name)
-		dst = os.path.join(os.path.join(log_dir, config_name.split('/')[-1]))
+		dst = os.path.join(os.path.join(log_dir, os.path.split(config_name)[-1]))
 		print src
 		print dst
 		copyfile(src, dst)
