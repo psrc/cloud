@@ -23,8 +23,10 @@ def checkout_tag(main_dir, repo_name, branch, tag=None):
 	git('stash')
 	git('checkout', branch)
 	if tag:
-		git('checkout', 'tags/'+tag)
-	git('pull')    # If not switching branches, pull latest code
+		git('fetch')
+		git('checkout', tag)
+	else:
+		git('pull')    # If not switching branches, pull latest code
 
 def config_list(heading, var, config):
 	"""
