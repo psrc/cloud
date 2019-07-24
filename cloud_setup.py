@@ -1,6 +1,6 @@
 # This script pulls all code, inputs, and spec files to a list of specified AWS servers to ensure consistency
 
-import os, sys, shutil
+import os, sys, shutil, stat
 import subprocess
 import json
 import time
@@ -24,7 +24,6 @@ def checkout_tag(main_dir, repo_name, branch, tag=None):
 	git('checkout', branch)
 	if tag:
 		git('checkout', 'tags/'+tag)
-	git('pull')    # If not switching branches, pull latest code
 
 def config_list(heading, var, config):
 	"""
@@ -79,12 +78,14 @@ def update_server(config_name):
 				if config['global']['update_soundcast_repo'] in['true','True','TRUE']:
 					print 'Updating Soundcast code from remote repository'
 
-					# clone directory if it doesn't exist
-					if not os.path.exists(os.path.join(src_dir,str(year))):
-						os.chdir(src_dir)
-						# clone repo if it doesn't exist
-						git('clone','https://github.com/psrc/soundcast','-b',
-							config['soundcast']['branch'],str(year))
+					# delete existing repo and clone directory 
+					if os.path.exists(os.path.join(src_dir,str(year))):
+						os.system('rmdir /S /Q "{}"'.format(os.path.join(src_dir,str(year))))
+					os.chdir(src_dir)
+					
+					# clone repo if it doesn't exist
+					git('clone','https://github.com/psrc/soundcast','-b',
+						config['soundcast']['branch'],str(year))
 					
 					# checkout proper branch and tag
 					checkout_tag(src_dir, str(year), config['soundcast']['branch'], config['soundcast']['tag'])
