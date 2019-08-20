@@ -12,7 +12,7 @@ These control which machines are updated, which components are refreshed,
 and the source of inputs for Soudndcast config files and skims. 
 
 To call the script:
-`python cloud_setup.py <config_file_name.ini>`
+`python cloud_setup.py <local path to config_file_name.ini>`
 
 For example, to set up servers for running Vision 2050 inputs:
 `python cloud_setup.py config\global\vision2050.ini`
