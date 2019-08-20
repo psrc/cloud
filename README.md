@@ -1,8 +1,10 @@
 # cloud
 
 Configure model servers with a common set of version-controlled code and settings. 
+- [Initial Machine Setup](https://github.com/psrc/cloud/wiki/AWS-Machine-Set-Up)
+- [Refreshing Machines (Vision 2050)](https://github.com/psrc/cloud/wiki/Refreshing-Machines)
 
-# Usage
+## Usage
 
 Specify settings in `*.ini` file in config/global.
 Each `*.in` file represents a single global configuration for cloud machines.
@@ -32,6 +34,3 @@ Together, these processes build a consistent modeling machine that works for ind
 
 ----
 
-For more information, visit:
-- [Initial Machine Setup](https://github.com/psrc/cloud/wiki/AWS-Machine-Set-Up)
-- [Refreshing Machines (Vision 2050)](https://github.com/psrc/cloud/wiki/Refreshing-Machines)
