@@ -33,4 +33,5 @@ Together, these processes build a consistent modeling machine that works for ind
 ----
 
 For more information, visit:
-# [Managing and Creating Servers Wiki](https://github.com/psrc/cloud/wiki/cloud)
+- [Initial Machine Setup](https://github.com/psrc/cloud/wiki/AWS-Machine-Set-Up)
+- [Refreshing Machines (Vision 2050)](https://github.com/psrc/cloud/wiki/Refreshing-Machines)
