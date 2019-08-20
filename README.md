@@ -15,9 +15,9 @@ To call the script:
 `python cloud_setup.py <local path to config_file_name.ini>`
 
 For example, to set up servers for running Vision 2050 inputs:
-`python cloud_setup.py config\global\vision2050.ini`
+`python cloud_setup.py config\global\vision2050_integrated.ini`
 
-Within the `config\global\vision2050.ini` file are settings that
+Within the `config\global\vision2050_integrated.ini` file are settings that
 represent input sources and code configuration for Vision 2050. 
 
 This script can perform the following tasks (which are controled through the `*.ini` files:
