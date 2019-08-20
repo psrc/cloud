@@ -9,7 +9,7 @@ import os
 base_year = '2014'  # This should always be 2014 unless the base year changes
 scenario_name = '2050_vision_updated'
 model_year = '2050'
-main_inputs_folder = r'R:\esprojects_two\SoundCast\Inputs\lodes\vision'
+main_inputs_folder = r'R:\e2projects_two\SoundCast\Inputs\lodes\vision'
 #####################################################################
 
 ######Set up:######
