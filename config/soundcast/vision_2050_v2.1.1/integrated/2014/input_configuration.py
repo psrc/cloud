@@ -7,9 +7,9 @@ import os
 # Scenario and input paths
 #####################################################################
 base_year = '2014'  # This should always be 2014 unless the base year changes
-scenario_name = '2050_vision_updated'
-model_year = '2050'
-main_inputs_folder = r'R:\e2projects_two\SoundCast\Inputs\lodes\vision'
+scenario_name = '2014'
+model_year = '2014'
+main_inputs_folder = r'R:/e2projects_two/SoundCast/Inputs/lodes/vision'
 #####################################################################
 
 ######Set up:######
@@ -60,11 +60,11 @@ run_time_choice_report = False
 delete_banks = False
 
 ###### Distance-based pricing######
-add_distance_pricing = True
+add_distance_pricing = False
 # rate below includes 3.5 cent carbon tax
 distance_rate_dict = {'am' : 13.5, 'md' : 8.5, 'pm' : 13.5, 'ev' : 8.5, 'ni' : 8.5}
 # HOT Lanes
-add_hot_lane_tolls = True
+add_hot_lane_tolls = False
 hot_rate_dict = {'am' : 35, 'md' : 10, 'pm' : 35, 'ev' : 10, 'ni' : 10}
 
 ###### Model iterations, population sampling, log files, etc.######
@@ -93,10 +93,11 @@ scenario_inputs = os.path.join(main_inputs_folder, scenario_name)
 
 # Integrated Run Settings
 #################################
-# Only required for integrated Urbans runs; leave as default for standard runs
-
 # Root dir for all Soundcast runs
-urbansim_skims_dir = r'E:\soundcast_root'
+urbansim_skims_dir = r'E:/soundcast_root'
 
 # Urbansim outputs dir
 urbansim_outputs_dir = r'E:\opusgit\urbansim_data\data\psrc_parcel\2014SoundCastData\urbansim_outputs'
+
+# Urbansim outputs config file
+urbansim_outputs_config_root = r'D:\opusgit\urbansim\inprocess\hana\configurations'

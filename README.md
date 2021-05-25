@@ -1,8 +1,10 @@
 # cloud
 
 Configure model servers with a common set of version-controlled code and settings. 
+- [Initial Machine Setup](https://github.com/psrc/cloud/wiki/AWS-Machine-Set-Up)
+- [Refreshing Machines (Vision 2050)](https://github.com/psrc/cloud/wiki/Refreshing-Machines)
 
-# Usage
+## Usage
 
 Specify settings in `*.ini` file in config/global.
 Each `*.in` file represents a single global configuration for cloud machines.
@@ -10,12 +12,12 @@ These control which machines are updated, which components are refreshed,
 and the source of inputs for Soudndcast config files and skims. 
 
 To call the script:
-`python cloud_setup.py <config_file_name.ini>`
+`python cloud_setup.py <local path to config_file_name.ini>`
 
 For example, to set up servers for running Vision 2050 inputs:
-`python cloud_setup.py config\global\vision2050.ini`
+`python cloud_setup.py config\global\vision2050_integrated.ini`
 
-Within the `config\global\vision2050.ini` file are settings that
+Within the `config\global\vision2050_integrated.ini` file are settings that
 represent input sources and code configuration for Vision 2050. 
 
 This script can perform the following tasks (which are controled through the `*.ini` files:
@@ -32,5 +34,3 @@ Together, these processes build a consistent modeling machine that works for ind
 
 ----
 
-For more information, visit:
-# [Managing and Creating Servers Wiki](https://github.com/psrc/cloud/wiki/cloud)
