@@ -3,10 +3,10 @@ import os
 ##############################
 # Input paths and model years
 ##############################
-model_year = '2018'
+model_year = '2030'
 base_year = '2018'
-landuse_inputs = 'vers2_july2020'
-network_inputs = 'current_2018'
+landuse_inputs = 'test_2050'
+network_inputs = 'rtp_2030'
 soundcast_inputs_dir = 'R:/e2projects_two/SoundCast/Inputs/dev'
 
 ##############################
@@ -41,7 +41,7 @@ include_delivery = False
 ##############################
 # Pricing
 ##############################
-add_distance_pricing = False
+add_distance_pricing = True
 distance_rate_dict = {'md': 8.5, 'ev': 8.5, 'am': 13.5, 'ni': 8.5, 'pm': 13.5}
 
 ##############################

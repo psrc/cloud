@@ -5,8 +5,8 @@ import os
 ##############################
 model_year = '2050'
 base_year = '2018'
-landuse_inputs = 'lodes'
-network_inputs = '2050'
+landuse_inputs = 'test_2050'
+network_inputs = '2050_rtp_constrained'
 soundcast_inputs_dir = 'R:/e2projects_two/SoundCast/Inputs/dev'
 
 ##############################
@@ -41,12 +41,12 @@ include_delivery = False
 ##############################
 # Pricing
 ##############################
-add_distance_pricing = False
+add_distance_pricing = True
 distance_rate_dict = {'md': 8.5, 'ev': 8.5, 'am': 13.5, 'ni': 8.5, 'pm': 13.5}
 
 ##############################
 # Other Controls
 ##############################
-run_integrated = False
+run_integrated = True
 should_build_shadow_price = False
 delete_banks = False
