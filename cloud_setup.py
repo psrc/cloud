@@ -49,7 +49,7 @@ def update_server(config_name):
 	# Loop through multiple servers as needed
 	cloud_list = config_list('global', 'cloud_list', config)
 	for cloud_name in cloud_list:
-		print cloud_name
+		print(cloud_name)
 
 		# Before anything happens, make sure the directory structure exists at the server root as expected
 		# E -> soundcast_root -> src; E -> opusgit -> urbansim; E -> opusgit -> urbansim_data; 
@@ -73,10 +73,10 @@ def update_server(config_name):
 			
 			model_years = config_list('soundcast', 'model_years', config)
 			for year in model_years:
-				print year
+				print(year)
 
 				if config['global']['update_soundcast_repo'] in['true','True','TRUE']:
-					print 'Updating Soundcast code from remote repository'
+					print('Updating Soundcast code from remote repository')
 
 					# delete existing repo and clone directory 
 					if os.path.exists(os.path.join(src_dir,str(year))):
@@ -91,7 +91,7 @@ def update_server(config_name):
 					checkout_tag(src_dir, str(year), config['soundcast']['branch'], config['soundcast']['tag'])
 
 				if config['global']['update_soundcast_config'] in['true','True','TRUE']:
-					print 'Updating Soundcast configuration files'
+					print('Updating Soundcast configuration files')
 
 					src = os.path.join(local_dir,'config','soundcast',config['soundcast']['config_source'], 
 						str(year),'input_configuration.py')
@@ -99,7 +99,7 @@ def update_server(config_name):
 					copyfile(src, dst)
 
 				if config['global']['copy_batch_files'] in['true','True','TRUE']:
-					print 'Copying Soundcast batch files for integrated run management'
+					print('Copying Soundcast batch files for integrated run management')
 
 					src = os.path.join(local_dir,'batch','run_soundcast_'+str(year)+'.bat')
 					dst = os.path.join(src_dir,'run_soundcast_'+str(year)+'.bat')
@@ -109,13 +109,13 @@ def update_server(config_name):
 		if config['global']['copy_archive_skims'] in['true','True','TRUE']:
 			skim_years = config_list('skims', 'skim_years', config)
 			for year in skim_years:
-				print 'Copying archived skims for: ' + str(year)
+				print('Copying archived skims for: ' + str(year))
 				src = os.path.join(config['skims']['skims_archive_dir'],str(year)+'-travelmodel.h5')
 				dst = os.path.join(root_dir,str(year)+'-travelmodel.h5')
 				copyfile(src, dst)
 
 		if config['global']['update_urbansim_repo'] in['true','True','TRUE']:
-			print 'Updating urbansim from remote repository'
+			print('Updating urbansim from remote repository')
 
 			if not os.path.exists(os.path.join(opusgit_dir,'urbansim')):
 				os.chdir(opusgit_dir)
@@ -124,7 +124,7 @@ def update_server(config_name):
 			checkout_tag(opusgit_dir, 'urbansim', config['urbansim']['branch'], config['urbansim']['tag'])
 
 		if config['global']['update_urbansim_data_repo'] in ['true','True','TRUE']:
-			print 'Updating urbansim_data from remote repository'
+			print('Updating urbansim_data from remote repository')
 			
 			if not os.path.exists(os.path.join(opusgit_dir,'urbansim_data')):
 				os.chdir(opusgit_dir)
@@ -141,8 +141,8 @@ def update_server(config_name):
 
 		src = os.path.join(local_dir,config_name)
 		dst = os.path.join(os.path.join(log_dir, os.path.split(config_name)[-1]))
-		print src
-		print dst
+		print(src)
+		print(dst)
 		copyfile(src, dst)
 
 		# Write a log file with info about this process
@@ -170,9 +170,9 @@ if __name__ == "__main__":
     try:
         config_name = sys.argv[1]
     except IndexError:
-        print "Usage: cloud_setup.py <config\global\config_file.ini>"
+        print("Usage: cloud_setup.py <config\global\config_file.ini>")
         sys.exit(1)
 
     # start the program
-    print config_name
+    print(config_name)
     program(config_name)
