@@ -6,7 +6,7 @@ import os
 model_year = '2040'
 base_year = '2018'
 landuse_inputs = 'lodes'
-network_inputs = '2040'
+network_inputs = '2040_rtp'
 soundcast_inputs_dir = 'R:/e2projects_two/SoundCast/Inputs/dev'
 
 ##############################
